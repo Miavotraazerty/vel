@@ -1,0 +1,82 @@
+<div class="notifications container mt-5">
+    <h3 class="text-center text-marron">🔔 Vos Notifications</h3>
+
+    {% for notif in notifications %}
+        <div class="notification-card shadow-sm p-3 mb-3 bg-white rounded">
+            <p class="mb-1">{{ notif.message }}</p>
+            <small class="text-muted">{{ notif.created_at }}</small>
+        </div>
+    {% empty %}
+        <p class="text-center text-muted">Aucune notification pour l'instant.</p>
+    {% endfor %}
+</div>
+
+<style>
+    body {
+        background-color: #fefaf7;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .text-marron {
+        color: #7b4b2a;
+    }
+
+    .notification-card {
+        border-left: 5px solid #a06d4f;
+        background-color: #fff9f4;
+        border-radius: 8px;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #7b4b2a;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+        animation: fadein 0.5s ease, fadeout 0.5s 4.5s ease;
+    }
+
+    @keyframes fadein {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeout {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(20px); }
+    }
+</style>
+
+<script>
+    function showNotification(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = "🔔 " + message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 5000);
+    }
+
+    function checkNewNotifications() {
+        fetch('/notifications/verification/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.new_notifications) {
+                    showNotification(data.message);
+                }
+            });
+    }
+
+    setInterval(checkNewNotifications, 30000);
+
+    const socket = new WebSocket("ws://127.0.0.1:8000/ws/notifications/");
+    socket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        showNotification(data.message);
+    };
+</script>

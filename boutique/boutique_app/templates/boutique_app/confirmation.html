@@ -1,0 +1,56 @@
+{% extends 'boutique_app/base.html' %}
+{% block title %}Commande validée{% endblock %}
+{% block content %}
+{% load static %}
+
+<style>
+    h1 {
+        animation: bounce 1s infinite alternate;
+        color: #5e3a23;
+    }
+
+    @keyframes bounce {
+        from { transform: translateY(0); }
+        to { transform: translateY(-5px); }
+    }
+
+    .confirmation-container {
+        background-color: #fffaf5;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(92, 60, 40, 0.2);
+    }
+
+    .text-marron {
+        color: #7b4b2a;
+    }
+
+    .btn-brown {
+        background-color: #7b4b2a;
+        color: white;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .btn-brown:hover {
+        background-color: #5e3a23;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="confirmation-container text-center">
+        <h1>🎉 Merci pour votre commande !</h1>
+        <p class="mt-3 text-marron">Votre commande a été validée avec succès. Nous vous contacterons bientôt pour la livraison.</p>
+
+        <div class="mt-4">
+            <a href="{% url 'liste_produits' %}" class="btn btn-brown">← Retour au catalogue</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+<script src="{% static 'js/script.js' %}" defer></script>
+

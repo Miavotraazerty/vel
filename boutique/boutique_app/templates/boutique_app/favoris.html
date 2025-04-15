@@ -1,0 +1,104 @@
+{% extends 'boutique_app/base.html' %}
+{% block title %}Mes favoris{% endblock %}
+{% block content %}
+{% load static %}
+
+<style>
+    body {
+        background-color: #fefaf7;
+    }
+
+    h2.text-center {
+        color: #7b4b2a;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        border: 1px solid #e6d5c3;
+        border-radius: 16px;
+        transition: transform 0.2s ease;
+        box-shadow: 0 4px 10px rgba(124, 85, 52, 0.1);
+    }
+
+    .card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 14px rgba(124, 85, 52, 0.2);
+    }
+
+    .btn-primary {
+        background-color: #7b4b2a;
+        border-color: #7b4b2a;
+    }
+
+    .btn-primary:hover {
+        background-color: #5c3920;
+        border-color: #5c3920;
+    }
+
+    .btn-danger {
+        background-color: #b1442f;
+        border-color: #b1442f;
+    }
+
+    .btn-danger:hover {
+        background-color: #942b1c;
+        border-color: #942b1c;
+    }
+
+    .card-title {
+        color: #7b4b2a;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        color: #5f4633;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center">⭐ Mes favoris</h2>
+    
+    {% if favoris %}
+        <div class="row">
+            {% for favori in favoris %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <img src="{% url 'afficher_image' favori.produit.id %}" class="card-img-top" alt="{{ favori.produit.nom }}">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title">{{ favori.produit.nom }}</h5>
+                                <p class="card-text">{{ favori.produit.prix }} Ar</p>
+                            </div>
+                            <div class="mt-3 d-flex justify-content-between">
+                                <a href="{% url 'detail_produit' favori.produit.id %}" class="btn btn-primary btn-sm">Voir</a>
+                                <button class="btn btn-danger btn-sm" onclick="supprimerFavori({{ favori.produit.id }})">🗑 Retirer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted text-center">Aucun produit en favori.</p>
+    {% endif %}
+</div>
+
+<script>
+function supprimerFavori(produitId) {
+    fetch(`/favori/supprimer/${produitId}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'removed') {
+                location.reload();
+            } else {
+                alert("Produit non trouvé !");
+            }
+        });
+}
+</script>
+<script src="{% static 'js/script.js' %}" defer></script>
+
+{% endblock %}

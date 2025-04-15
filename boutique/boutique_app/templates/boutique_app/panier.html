@@ -1,0 +1,90 @@
+{% extends 'boutique_app/base.html' %}
+{% block title %}Panier{% endblock %}
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+
+<style>
+    .card-panier {
+        background-color: #fffaf5;
+        border: 1px solid #decbbd;
+        border-radius: 12px;
+    }
+
+    .btn-brown {
+        background-color: #7b4b2a;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .btn-brown:hover {
+        background-color: #5e3a23;
+    }
+
+    .btn-supprimer {
+        border: 1px solid #a05e3b;
+        color: #a05e3b;
+        transition: 0.3s;
+    }
+
+    .btn-supprimer:hover {
+        background-color: #a05e3b;
+        color: white;
+    }
+
+    .text-marron {
+        color: #7b4b2a;
+    }
+
+    .btn-passer-commande {
+        background-color: #5c3d2e;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 18px;
+        border-radius: 10px;
+    }
+
+    .btn-passer-commande:hover {
+        background-color: #3e271c;
+    }
+</style>
+
+<h1 class="text-center my-4 text-marron">🛒 Votre panier</h1>
+
+{% if details %}
+    <div class="container">
+        <div class="row">
+            {% for detail in details %}
+                <div class="col-md-6 mb-3">
+                    <div class="card card-panier shadow-sm">
+                        <div class="row g-0 align-items-center">
+                            <div class="col-md-4">
+                                <img src="{% url 'afficher_image' detail.produit.id %}" class="img-fluid rounded-start" alt="{{ detail.produit.nom }}">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ detail.produit.nom }}</h5>
+                                    <p class="card-text fw-bold text-marron">{{ detail.produit.prix }} Ar</p>
+                                    <a href="{% url 'supprimer_du_panier' detail.id %}" class="btn btn-supprimer btn-sm">🗑 Supprimer</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'passer_commande' %}" class="btn btn-passer-commande">✅ Passer la commande</a>
+    </div>
+{% else %}
+    <p class="text-center text-marron">Votre panier est vide.</p>
+{% endif %}
+
+<script src="{% static 'js/script.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'boutique_app/base.html' %}
+{% block title %}Mon espace{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="container mt-5">
+    <h2 class="text-center">👤 Mon Espace</h2>
+    
+    <div class="card p-3 shadow-sm mb-4">
+        <h4>Informations du compte</h4>
+        <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+        <a href="{% url 'modifier_profil' %}" class="btn btn-outline-primary btn-sm">Modifier mon profil</a>
+    </div>
+    <h3 class="mt-4">📦 Mes commandes</h3>
+
+    {% if commandes %}
+        <ul class="list-group">
+            {% for commande in commandes %}
+                <li class="list-group-item">
+                    <h5>Commande #{{ commande.id }} - {{ commande.date_commande|date:"d/m/Y" }}</h5>
+                    <span class="badge bg-info">{{ commande.get_statut_display }}</span>
+    
+                    <ul class="mt-2">
+                        {% for detail in commande.detailcommande_set.all %}
+                            <li>
+                                <strong>{{ detail.produit.nom }}</strong> - Quantité : {{ detail.quantite }} - 
+                                <span class="text-success">{{ detail.produit.prix }} Ar</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">Aucune commande pour le moment.</p>
+    {% endif %}
+    
+</div>
+<script src="{% static 'js/script.js' %}" defer></script>
+
+{% endblock %}
